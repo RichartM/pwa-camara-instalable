@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- viewport-fit=cover: usa toda la pantalla en iPhone con notch -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Captura de evidencia fotográfica con acceso consciente a cámara.">
+
+    <!-- Instalabilidad: manifiesto + color de la barra del sistema -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- iOS: icono de pantalla de inicio y modo standalone (Safari prioriza estas etiquetas) -->
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="InspecciónPWA">
+
+    <link rel="icon" type="image/png" href="./icons/icon-192.png">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Inspección Visual PWA</title>
+</head>
+<body>
+    <header class="encabezado">
+        <h1>Inspección Visual - Medina Villagomez Luis Ricardo</h1>
+        <!-- Botón de instalación propio: solo aparece si el navegador dispara beforeinstallprompt (Android/Chrome) -->
+        <button id="btn-instalar" class="btn btn-secundario" hidden>Instalar App</button>
+    </header>
+
+    <main class="contenido">
+        <!-- Guía manual para iPhone: iOS nunca dispara beforeinstallprompt -->
+        <section id="instrucciones-ios" class="tarjeta tarjeta-info" hidden>
+            <h2>Instalar en iPhone</h2>
+            <p>Pulsa el icono <strong>Compartir</strong> <span aria-hidden="true">(□↑)</span> en Safari y selecciona <strong>"Agregar a inicio"</strong>.</p>
+        </section>
+
+        <!-- Visor de cámara: autoplay + playsinline + muted evitan que iOS abra el reproductor a pantalla completa -->
+        <div class="contenedor-visor">
+            <video id="visor-camara" autoplay playsinline muted></video>
+            <p id="visor-vacio" class="visor-vacio">Cámara apagada</p>
+        </div>
+
+        <!-- Mensajes de estado y errores (se actualiza desde app.js) -->
+        <p id="mensaje-estado" class="mensaje-estado" role="status" aria-live="polite">Listo. La cámara no se ha solicitado.</p>
+
+        <!-- Paso 1 del pre-permiso: este botón NO pide permiso, solo muestra el aviso -->
+        <button id="btn-preparar-camara" class="btn btn-primario">Solicitar Acceso a Cámara</button>
+
+        <!-- Aviso ético de consentimiento (oculto hasta el paso 1) -->
+        <section id="aviso-permiso" class="tarjeta tarjeta-aviso" hidden>
+            <h2>Antes de encender la cámara</h2>
+            <p>Esta aplicación requiere acceso a tu cámara únicamente para mostrar una vista previa local en pantalla. Ninguna imagen se envía a servidores externos.</p>
+            <p class="nota">Se encenderá primero la <strong>cámara trasera</strong>. Después tu navegador te pedirá confirmar el permiso.</p>
+            <div class="fila-botones">
+                <button id="btn-cancelar-permiso" class="btn btn-secundario">Ahora no</button>
+                <!-- Paso 2: aquí sí se llama a getUserMedia() -->
+                <button id="btn-confirmar-permiso" class="btn btn-primario">Aceptar y Encender Cámara</button>
+            </div>
+        </section>
+
+        <!-- Controles que se habilitan cuando la cámara está activa -->
+        <div class="fila-botones">
+            <button id="btn-alternar-camara" class="btn btn-secundario" disabled>Cambiar cámara</button>
+            <button id="btn-apagar-camara" class="btn btn-peligro" disabled>Apagar</button>
+        </div>
+    </main>
+
+    <script src="./app.js"></script>
+</body>
+</html>
